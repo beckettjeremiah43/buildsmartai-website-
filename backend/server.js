@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import express from 'express';
-import cors from 'cors';
 import helmet from 'helmet';
 import { rateLimit } from 'express-rate-limit';
 
@@ -24,13 +23,19 @@ import { stripeWebhookHandler } from './routes/payments.js';
 const app  = express();
 const PORT = process.env.PORT || 3001;
 
-// CORS must come before helmet so preflight OPTIONS responses include the header
-const corsOptions = { origin: true, credentials: true };
-app.options('*', cors(corsOptions));
-app.use(cors(corsOptions));
+// ── CORS: manual headers, runs before everything ──────────
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin) res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept');
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  next();
+});
 
 // ── Security ──────────────────────────────────────────────
-app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(helmet({ crossOriginResourcePolicy: false, crossOriginEmbedderPolicy: false }));
 
 // ── Stripe webhook: raw body required before json parser ──
 app.post(
