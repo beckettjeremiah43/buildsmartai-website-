@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY,
-);
+// Lazy-initialize so env vars are read at request time, not module load time
+function getSupabase() {
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_KEY,
+  );
+}
 
 // Lightweight: verifies JWT only — no client record lookup.
 // Used for the registration endpoint where no client row exists yet.
@@ -12,7 +15,7 @@ export async function requireJwt(req, res, next) {
   if (!header?.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Missing authorization token' });
   }
-  const { data: { user }, error } = await supabase.auth.getUser(header.slice(7));
+  const { data: { user }, error } = await getSupabase().auth.getUser(header.slice(7));
   if (error || !user) return res.status(401).json({ error: 'Invalid or expired token' });
   req.user = user;
   next();
@@ -26,6 +29,7 @@ export async function requireAuth(req, res, next) {
 
   const token = header.slice(7);
 
+  const supabase = getSupabase();
   const { data: { user }, error: authError } = await supabase.auth.getUser(token);
   if (authError || !user) {
     return res.status(401).json({ error: 'Invalid or expired token' });
