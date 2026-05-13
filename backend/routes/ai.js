@@ -1,3 +1,4 @@
+import { supabase } from '../lib/supabase.js';
 import { Router }            from 'express';
 import { createClient }      from '@supabase/supabase-js';
 import { requireAuth }       from '../middleware/auth.js';
@@ -5,10 +6,6 @@ import { aiLimiter }         from '../middleware/rateLimit.js';
 import { chat, draftDocument } from '../services/claude.js';
 
 const router   = Router();
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY,
-);
 
 router.use(requireAuth);
 

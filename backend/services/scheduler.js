@@ -1,15 +1,11 @@
+import { supabase } from '../lib/supabase.js';
 import cron          from 'node-cron';
-import { createClient } from '@supabase/supabase-js';
 import twilio           from 'twilio';
 import { generateDailySummary } from './claude.js';
 import { detectConflicts }      from './claude.js';
 import { runAllChecks }         from './conflictDetector.js';
 import { sendDailySummaryEmail } from '../routes/email.js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY,
-);
 
 const twilioClient = twilio(
   process.env.TWILIO_ACCOUNT_SID,

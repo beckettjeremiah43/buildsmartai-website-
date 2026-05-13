@@ -1,12 +1,8 @@
+import { supabase } from '../lib/supabase.js';
 import { Router }       from 'express';
-import { createClient } from '@supabase/supabase-js';
 import { requireAuth }  from '../middleware/auth.js';
 
 const router   = Router();
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY,
-);
 
 // All routes require authentication
 router.use(requireAuth);
