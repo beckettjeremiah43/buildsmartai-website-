@@ -1,0 +1,26 @@
+{
+  "name": "scheduleai-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev":   "node --watch server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk":   "^0.39.0",
+    "@supabase/supabase-js": "^2.47.0",
+    "cors":                "^2.8.5",
+    "dotenv":              "^16.4.7",
+    "express":             "^4.21.2",
+    "express-rate-limit":  "^7.5.0",
+    "helmet":              "^8.0.0",
+    "node-cron":           "^3.0.3",
+    "resend":              "^4.2.0",
+    "stripe":              "^17.5.0",
+    "twilio":              "^5.4.0"
+  }
+}
