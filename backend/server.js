@@ -27,19 +27,8 @@ const PORT = process.env.PORT || 3001;
 // ── Security ──────────────────────────────────────────────
 app.use(helmet());
 
-const allowedOrigins = [
-  'https://buildsmartai-website.vercel.app',
-  'http://localhost:5173',
-  process.env.FRONTEND_URL,
-].filter(Boolean);
-
-app.use(cors({
-  origin:      (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-    cb(new Error(`CORS: origin ${origin} not allowed`));
-  },
-  credentials: true,
-}));
+app.use(cors({ origin: true, credentials: true }));
+app.options('*', cors({ origin: true, credentials: true }));
 
 // ── Stripe webhook: raw body required before json parser ──
 app.post(
