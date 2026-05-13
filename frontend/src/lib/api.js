@@ -1,6 +1,10 @@
 import { supabase } from './supabase.js';
 
-const BASE = import.meta.env.VITE_BACKEND_URL;
+// In production (Vercel), use relative paths so Vercel proxies /api/* to Railway.
+// In dev, fall back to localhost or VITE_BACKEND_URL.
+const BASE = import.meta.env.DEV
+  ? (import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001')
+  : '';
 
 // ── Core fetch wrapper ────────────────────────────────────────────────────────
 
