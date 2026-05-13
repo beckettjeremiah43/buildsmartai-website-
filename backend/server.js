@@ -24,11 +24,13 @@ import { stripeWebhookHandler } from './routes/payments.js';
 const app  = express();
 const PORT = process.env.PORT || 3001;
 
-// ── Security ──────────────────────────────────────────────
-app.use(helmet());
+// CORS must come before helmet so preflight OPTIONS responses include the header
+const corsOptions = { origin: true, credentials: true };
+app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
 
-app.use(cors({ origin: true, credentials: true }));
-app.options('*', cors({ origin: true, credentials: true }));
+// ── Security ──────────────────────────────────────────────
+app.use(helmet({ crossOriginResourcePolicy: false }));
 
 // ── Stripe webhook: raw body required before json parser ──
 app.post(
