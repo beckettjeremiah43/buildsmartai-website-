@@ -23,6 +23,12 @@ import { stripeWebhookHandler } from './routes/payments.js';
 const app  = express();
 const PORT = process.env.PORT || 3001;
 
+// ── Request logger (diagnostic) ──────────────────────────
+app.use((req, res, next) => {
+  console.log(`[req] ${req.method} ${req.path}`);
+  next();
+});
+
 // ── CORS: manual headers, runs before everything ──────────
 app.use((req, res, next) => {
   const origin = req.headers.origin;
