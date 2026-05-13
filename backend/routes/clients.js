@@ -96,12 +96,14 @@ router.post('/generate-prompt', requireAuth, async (req, res, next) => {
     const allSkills = [...new Set((crew || []).flatMap(c => c.skills || []))];
     const jobNames  = (jobs || []).map(j => j.name).join(', ');
 
-    const message = await anthropic.messages.create({
-      model:      'claude-sonnet-4-20250514',
-      max_tokens: 512,
-      messages: [{
-        role: 'user',
-        content: `Write a custom AI assistant system prompt for a construction contractor with these details:
+    let aiSystemPrompt;
+    try {
+      const message = await anthropic.messages.create({
+        model:      'claude-sonnet-4-20250514',
+        max_tokens: 512,
+        messages: [{
+          role: 'user',
+          content: `Write a custom AI assistant system prompt for a construction contractor with these details:
 Company: ${client?.company_name}
 Owner: ${client?.owner_name}
 Trades/skills on crew: ${allSkills.join(', ') || 'general construction'}
@@ -115,10 +117,13 @@ The prompt should:
 - Be 3-5 sentences
 
 Return only the system prompt text, no explanation.`,
-      }],
-    });
-
-    const aiSystemPrompt = message.content[0].text.trim();
+        }],
+      });
+      aiSystemPrompt = message.content[0].text.trim();
+    } catch (claudeErr) {
+      console.error('[generate-prompt] Claude API error, using default prompt:', claudeErr.message);
+      aiSystemPrompt = `You are a scheduling and operations assistant for ${client?.company_name || 'a construction company'}. Help ${client?.owner_name || 'the owner'} manage crew assignments, job timelines, and subcontractor schedules. Proactively flag conflicts, double-bookings, and scheduling gaps. Keep responses concise and actionable — contractors need quick answers.`;
+    }
 
     const { data, error } = await supabase
       .from('clients')

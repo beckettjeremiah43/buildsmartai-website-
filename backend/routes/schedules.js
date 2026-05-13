@@ -19,30 +19,33 @@ router.get('/snapshot', async (req, res, next) => {
     const today = new Date().toISOString().split('T')[0];
     const end   = new Date(Date.now() + days * 86_400_000).toISOString().split('T')[0];
 
-    const [{ data: jobs }, { data: assignments }, { data: subSchedules }] =
-      await Promise.all([
-        supabase
-          .from('jobs')
-          .select('*')
-          .eq('client_id', req.clientId)
-          .eq('status', 'active')
-          .lte('start_date', end)
-          .gte('end_date',   today),
+    const { data: jobs } = await supabase
+      .from('jobs')
+      .select('*')
+      .eq('client_id', req.clientId)
+      .eq('status', 'active')
+      .lte('start_date', end)
+      .gte('end_date',   today);
 
-        supabase
-          .from('assignments')
-          .select('*, crew(id, name, skills, status)')
-          .eq('client_id', req.clientId)
-          .gte('date', today)
-          .lte('date', end),
+    const jobIds = (jobs || []).map(j => j.id);
 
-        supabase
-          .from('sub_schedules')
-          .select('*, subcontractors(id, company_name, trade, reliability_score)')
-          .in('job_id', (jobs || []).map(j => j.id))
-          .gte('scheduled_date', today)
-          .lte('scheduled_date', end),
-      ]);
+    const [{ data: assignments }, { data: subSchedules }] = await Promise.all([
+      supabase
+        .from('assignments')
+        .select('*, crew(id, name, skills, status)')
+        .eq('client_id', req.clientId)
+        .gte('date', today)
+        .lte('date', end),
+
+      jobIds.length > 0
+        ? supabase
+            .from('sub_schedules')
+            .select('*, subcontractors(id, company_name, trade, reliability_score)')
+            .in('job_id', jobIds)
+            .gte('scheduled_date', today)
+            .lte('scheduled_date', end)
+        : Promise.resolve({ data: [] }),
+    ]);
 
     res.json({ jobs: jobs || [], assignments: assignments || [], subSchedules: subSchedules || [] });
   } catch (err) {
@@ -220,30 +223,33 @@ async function getSnapshot(clientId, days = 14) {
   const today = new Date().toISOString().split('T')[0];
   const end   = new Date(Date.now() + days * 86_400_000).toISOString().split('T')[0];
 
-  const [{ data: jobs }, { data: assignments }, { data: subSchedules }] =
-    await Promise.all([
-      supabase
-        .from('jobs')
-        .select('id, name, status, start_date, end_date, phases')
-        .eq('client_id', clientId)
-        .eq('status', 'active')
-        .lte('start_date', end)
-        .gte('end_date',   today),
+  const { data: jobs } = await supabase
+    .from('jobs')
+    .select('id, name, status, start_date, end_date, phases')
+    .eq('client_id', clientId)
+    .eq('status', 'active')
+    .lte('start_date', end)
+    .gte('end_date',   today);
 
-      supabase
-        .from('assignments')
-        .select('*, crew(id, name, skills, status)')
-        .eq('client_id', clientId)
-        .gte('date', today)
-        .lte('date', end),
+  const jobIds = (jobs || []).map(j => j.id);
 
-      supabase
-        .from('sub_schedules')
-        .select('*, subcontractors(id, company_name, trade)')
-        .in('job_id', (jobs || []).map(j => j.id))
-        .gte('scheduled_date', today)
-        .lte('scheduled_date', end),
-    ]);
+  const [{ data: assignments }, { data: subSchedules }] = await Promise.all([
+    supabase
+      .from('assignments')
+      .select('*, crew(id, name, skills, status)')
+      .eq('client_id', clientId)
+      .gte('date', today)
+      .lte('date', end),
+
+    jobIds.length > 0
+      ? supabase
+          .from('sub_schedules')
+          .select('*, subcontractors(id, company_name, trade)')
+          .in('job_id', jobIds)
+          .gte('scheduled_date', today)
+          .lte('scheduled_date', end)
+      : Promise.resolve({ data: [] }),
+  ]);
 
   return { jobs: jobs || [], assignments: assignments || [], subSchedules: subSchedules || [] };
 }
