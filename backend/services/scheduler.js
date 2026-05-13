@@ -7,10 +7,13 @@ import { runAllChecks }         from './conflictDetector.js';
 import { sendDailySummaryEmail } from '../routes/email.js';
 
 
-const twilioClient = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN,
-);
+let _twilioClient = null;
+function getTwilio() {
+  if (!_twilioClient) {
+    _twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+  }
+  return _twilioClient;
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -41,7 +44,7 @@ async function getScheduleSnapshot(clientId) {
 async function sendSms(to, body) {
   if (!to || !process.env.TWILIO_PHONE_NUMBER) return;
   try {
-    await twilioClient.messages.create({
+    await getTwilio().messages.create({
       body,
       from: process.env.TWILIO_PHONE_NUMBER,
       to,
