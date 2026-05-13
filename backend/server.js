@@ -23,6 +23,9 @@ import { stripeWebhookHandler } from './routes/payments.js';
 const app  = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust Railway's reverse proxy so express-rate-limit reads the real client IP
+app.set('trust proxy', 1);
+
 // ── Request logger (diagnostic) ──────────────────────────
 app.use((req, res, next) => {
   console.log(`[req] ${req.method} ${req.path}`);

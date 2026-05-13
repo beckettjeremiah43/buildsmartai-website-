@@ -22,41 +22,45 @@ export async function requireJwt(req, res, next) {
 }
 
 export async function requireAuth(req, res, next) {
-  const header = req.headers.authorization;
-  if (!header?.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Missing authorization token' });
+  try {
+    const header = req.headers.authorization;
+    if (!header?.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Missing authorization token' });
+    }
+
+    const token = header.slice(7);
+
+    const supabase = getSupabase();
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return res.status(401).json({ error: 'Invalid or expired token' });
+    }
+
+    const { data: client, error: clientError } = await supabase
+      .from('clients')
+      .select('id, subscription_status, subscription_tier')
+      .eq('email', user.email)
+      .single();
+
+    if (clientError || !client) {
+      return res.status(403).json({ error: 'No client account found for this user' });
+    }
+
+    if (client.subscription_status === 'cancelled') {
+      return res.status(403).json({ error: 'Subscription cancelled — please reactivate to continue' });
+    }
+
+    req.user         = user;
+    req.clientId     = client.id;
+    req.subscription = {
+      tier:   client.subscription_tier,
+      status: client.subscription_status,
+    };
+
+    next();
+  } catch (err) {
+    next(err);
   }
-
-  const token = header.slice(7);
-
-  const supabase = getSupabase();
-  const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-  if (authError || !user) {
-    return res.status(401).json({ error: 'Invalid or expired token' });
-  }
-
-  const { data: client, error: clientError } = await supabase
-    .from('clients')
-    .select('id, subscription_status, subscription_tier')
-    .eq('email', user.email)
-    .single();
-
-  if (clientError || !client) {
-    return res.status(403).json({ error: 'No client account found for this user' });
-  }
-
-  if (client.subscription_status === 'cancelled') {
-    return res.status(403).json({ error: 'Subscription cancelled — please reactivate to continue' });
-  }
-
-  req.user       = user;
-  req.clientId   = client.id;
-  req.subscription = {
-    tier:   client.subscription_tier,
-    status: client.subscription_status,
-  };
-
-  next();
 }
 
 // Middleware that restricts an endpoint to a minimum subscription tier.
