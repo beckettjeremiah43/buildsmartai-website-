@@ -70,7 +70,8 @@ function MessageBubble({ role, content }) {
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
       {!isUser && (
-        <div className="w-7 h-7 rounded-full bg-brand-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mr-2 mt-0.5">
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mr-2 mt-0.5"
+          style={{ background: 'linear-gradient(135deg,#47c8ff,#6366f1)', color: '#0d0d0d' }}>
           AI
         </div>
       )}
@@ -183,19 +184,31 @@ export default function AIChat({ isOpen, onClose, prefillMessage }) {
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-brand-500 flex items-center justify-center text-white text-xs font-bold">
-              AI
+        <div className="flex items-center justify-between px-4 py-3 flex-shrink-0"
+          style={{ background: 'linear-gradient(135deg,#0d0d0d,#1a0d2e)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ background: 'linear-gradient(135deg,#47c8ff,#6366f1)' }}>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <rect x="2" y="2" width="5" height="5" rx="1" fill="#0d0d0d"/>
+                <rect x="9" y="2" width="5" height="5" rx="1" fill="#0d0d0d"/>
+                <rect x="2" y="9" width="12" height="5" rx="1" fill="#0d0d0d"/>
+              </svg>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 text-sm">ScheduleAI Assistant</h3>
-              <p className="text-xs text-gray-400">Ask anything about your schedule</p>
+              <h3 className="font-semibold text-white text-sm">ScheduleAI Assistant</h3>
+              <p className="text-xs flex items-center gap-1.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+                Online · knows your schedule
+              </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors text-lg"
+            style={{ color: 'rgba(255,255,255,0.4)' }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           >
             ×
           </button>

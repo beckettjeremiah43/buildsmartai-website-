@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { clients, payments }  from '../lib/api.js';
-import Navbar from '../components/Navbar.jsx';
+import Sidebar from '../components/Sidebar.jsx';
 
 // ── Section wrapper ────────────────────────────────────────────────────────────
 
@@ -171,10 +171,11 @@ export default function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar companyName={client?.company_name} />
+    <div className="flex min-h-screen bg-paper">
+      <Sidebar companyName={client?.company_name} ownerName={client?.owner_name} />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+      <div className="flex-1 min-w-0">
+      <main className="max-w-3xl mx-auto px-6 py-10 space-y-10">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
           <p className="text-sm text-gray-500 mt-1">Manage your account, subscription, and AI assistant.</p>
@@ -301,6 +302,7 @@ export default function Settings() {
           </>
         )}
       </main>
+      </div>
 
       <Toast message={toast.message} type={toast.type} />
     </div>
