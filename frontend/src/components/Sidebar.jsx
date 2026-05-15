@@ -28,6 +28,28 @@ const NAV_ITEMS = [
     ),
   },
   {
+    to: '/contacts',
+    label: 'Contacts',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="6" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
+        <path d="M1 13c0-2.761 2.239-4 5-4s5 1.239 5 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M12 7h3M13.5 5.5v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    to: '/contracts',
+    label: 'Contracts',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <rect x="2" y="1" width="10" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <path d="M5 5h4M5 8h4M5 11h2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        <path d="M12 10l2 2-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
+  },
+  {
     to: '/calendar',
     label: 'Calendar',
     icon: (
@@ -191,7 +213,9 @@ export default function Sidebar({ companyName, ownerName, onOpenAI, conflictCoun
           </span>
         </Link>
         <div className="flex items-center gap-2">
-          <Link to="/jobs"     className="text-white/50 hover:text-white text-xs px-2 py-1">Jobs</Link>
+          <Link to="/jobs"      className="text-white/50 hover:text-white text-xs px-2 py-1">Jobs</Link>
+          <Link to="/contacts"  className="text-white/50 hover:text-white text-xs px-2 py-1">Contacts</Link>
+          <Link to="/contracts" className="text-white/50 hover:text-white text-xs px-2 py-1">Contracts</Link>
           <Link to="/calendar" className="text-white/50 hover:text-white text-xs px-2 py-1">Calendar</Link>
           <Link to="/settings" className="text-white/50 hover:text-white text-xs px-2 py-1">Settings</Link>
           <button onClick={handleSignOut} disabled={signingOut}

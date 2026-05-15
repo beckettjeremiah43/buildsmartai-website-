@@ -101,6 +101,26 @@ export const subcontractors = {
   removeSchedule: (scheduleId)            => del(`/api/subcontractors/schedules/${scheduleId}`),
 };
 
+// ── Contacts ──────────────────────────────────────────────────────────────────
+
+export const contacts = {
+  list:   (params = {}) => get(`/api/contacts?${new URLSearchParams(params)}`),
+  get:    (id)          => get(`/api/contacts/${id}`),
+  create: (body)        => post('/api/contacts', body),
+  update: (id, body)    => patch(`/api/contacts/${id}`, body),
+  remove: (id)          => del(`/api/contacts/${id}`),
+};
+
+// ── Contracts ─────────────────────────────────────────────────────────────────
+
+export const contracts = {
+  list:   (params = {}) => get(`/api/contracts?${new URLSearchParams(params)}`),
+  get:    (id)          => get(`/api/contracts/${id}`),
+  create: (body)        => post('/api/contracts', body),
+  update: (id, body)    => patch(`/api/contracts/${id}`, body),
+  remove: (id)          => del(`/api/contracts/${id}`),
+};
+
 // ── Payments ──────────────────────────────────────────────────────────────────
 
 export const payments = {
