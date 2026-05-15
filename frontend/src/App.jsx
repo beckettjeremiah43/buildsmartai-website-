@@ -1,10 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes }        from 'react-router-dom';
 import { supabase }    from './lib/supabase.js';
+import Home            from './pages/Home.jsx';
 import Login           from './pages/Login.jsx';
 import Onboarding      from './pages/Onboarding.jsx';
 import Dashboard       from './components/Dashboard.jsx';
 import Settings        from './pages/Settings.jsx';
+import Calendar        from './pages/Calendar.jsx';
 
 // ── Auth context ──────────────────────────────────────────────────────────────
 
@@ -69,12 +71,13 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/"          element={<Navigate to="/dashboard" replace />} />
+          <Route path="/"          element={<RedirectIfAuthed><Home /></RedirectIfAuthed>} />
           <Route path="/login"     element={<RedirectIfAuthed><Login /></RedirectIfAuthed>} />
           <Route path="/onboarding" element={<RedirectIfAuthed><Onboarding /></RedirectIfAuthed>} />
           <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+          <Route path="/calendar"  element={<RequireAuth><Calendar /></RequireAuth>} />
           <Route path="/settings"  element={<RequireAuth><Settings /></RequireAuth>} />
-          <Route path="*"          element={<Navigate to="/dashboard" replace />} />
+          <Route path="*"          element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
