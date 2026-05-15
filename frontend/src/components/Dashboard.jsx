@@ -6,6 +6,7 @@ import GanttChart     from './GanttChart.jsx';
 import CrewPanel      from './CrewPanel.jsx';
 import JobBoard       from './JobBoard.jsx';
 import AIChat         from './AIChat.jsx';
+import PnLChart       from './PnLChart.jsx';
 
 // ── Metric card ───────────────────────────────────────────────────────────────
 
@@ -223,6 +224,9 @@ export default function Dashboard() {
               onResolve={handleResolve}
               onAskAI={handleAskAI}
             />
+
+            {/* P&L chart */}
+            <PnLChart />
 
             {/* Jobs + Alerts two-col */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">

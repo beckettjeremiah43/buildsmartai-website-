@@ -57,6 +57,7 @@ export const clients = {
 export const jobs = {
   list:   (params = {}) => get(`/api/jobs?${new URLSearchParams(params)}`),
   get:    (id)          => get(`/api/jobs/${id}`),
+  pnl:    (months = 6)  => get(`/api/jobs/pnl?months=${months}`),
   create: (body)        => post('/api/jobs', body),
   update: (id, body)    => patch(`/api/jobs/${id}`, body),
   remove: (id)          => del(`/api/jobs/${id}`),
