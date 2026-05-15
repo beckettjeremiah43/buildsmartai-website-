@@ -7,6 +7,7 @@ import Onboarding      from './pages/Onboarding.jsx';
 import Dashboard       from './components/Dashboard.jsx';
 import Settings        from './pages/Settings.jsx';
 import Calendar        from './pages/Calendar.jsx';
+import Jobs            from './pages/Jobs.jsx';
 
 // ── Auth context ──────────────────────────────────────────────────────────────
 
@@ -75,6 +76,7 @@ export default function App() {
           <Route path="/login"     element={<RedirectIfAuthed><Login /></RedirectIfAuthed>} />
           <Route path="/onboarding" element={<RedirectIfAuthed><Onboarding /></RedirectIfAuthed>} />
           <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+          <Route path="/jobs"      element={<RequireAuth><Jobs /></RequireAuth>} />
           <Route path="/calendar"  element={<RequireAuth><Calendar /></RequireAuth>} />
           <Route path="/settings"  element={<RequireAuth><Settings /></RequireAuth>} />
           <Route path="*"          element={<Navigate to="/" replace />} />

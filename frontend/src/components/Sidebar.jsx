@@ -17,6 +17,17 @@ const NAV_ITEMS = [
     ),
   },
   {
+    to: '/jobs',
+    label: 'Jobs',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <rect x="1" y="1" width="14" height="4" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <rect x="1" y="7" width="14" height="4" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <rect x="1" y="13" width="8" height="2" rx="1" fill="currentColor" opacity="0.5"/>
+      </svg>
+    ),
+  },
+  {
     to: '/calendar',
     label: 'Calendar',
     icon: (
@@ -180,6 +191,7 @@ export default function Sidebar({ companyName, ownerName, onOpenAI, conflictCoun
           </span>
         </Link>
         <div className="flex items-center gap-2">
+          <Link to="/jobs"     className="text-white/50 hover:text-white text-xs px-2 py-1">Jobs</Link>
           <Link to="/calendar" className="text-white/50 hover:text-white text-xs px-2 py-1">Calendar</Link>
           <Link to="/settings" className="text-white/50 hover:text-white text-xs px-2 py-1">Settings</Link>
           <button onClick={handleSignOut} disabled={signingOut}
