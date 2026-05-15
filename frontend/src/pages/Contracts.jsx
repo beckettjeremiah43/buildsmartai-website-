@@ -87,29 +87,39 @@ function DocumentsTab({ contractId }) {
   return (
     <div className="space-y-4">
       {/* Upload zone */}
+      <input
+        ref={fileRef}
+        type="file"
+        className="hidden"
+        accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.gif,.txt"
+        onChange={handleUpload}
+        disabled={uploading}
+      />
       <div
         onClick={() => !uploading && fileRef.current?.click()}
-        className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors
+        className={`border-2 border-dashed rounded-xl p-5 text-center transition-colors
           ${uploading ? 'border-brand-300 bg-brand-50/30 cursor-wait' : 'border-gray-200 hover:border-brand-300 hover:bg-brand-50/20 cursor-pointer'}`}
       >
-        <input
-          ref={fileRef}
-          type="file"
-          className="hidden"
-          accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.gif,.txt"
-          onChange={handleUpload}
-          disabled={uploading}
-        />
         {uploading ? (
           <div className="flex flex-col items-center gap-2">
             <div className="w-5 h-5 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
             <p className="text-xs text-brand-600 font-medium">Uploading…</p>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-1.5">
-            <span className="text-2xl">📎</span>
-            <p className="text-sm font-medium text-ink">Click to attach a file</p>
-            <p className="text-xs text-muted">PDF, Word, Excel, images — up to 20 MB</p>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-9 h-9 rounded-lg bg-brand-50 flex items-center justify-center text-brand-500 text-lg">
+              <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+                <path d="M8 11V3M5 6l3-3 3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-ink">Upload a file</p>
+              <p className="text-xs text-muted mt-0.5">PDF, Word, Excel, images — up to 20 MB</p>
+            </div>
+            <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-brand-500 text-white text-xs font-semibold pointer-events-none">
+              Choose file
+            </span>
           </div>
         )}
       </div>
@@ -523,10 +533,13 @@ export default function Contracts() {
 
   function handleSaved(saved) {
     setList(prev => {
-      const idx = prev.findIndex(c => c.id === saved.id);
-      return idx >= 0 ? prev.map(c => c.id === saved.id ? saved : c) : [saved, ...prev];
+      const exists = prev.some(c => c.id === saved.id);
+      // New contract: keep panel open in edit mode so user can attach documents
+      setPanel(exists ? null : saved);
+      return exists
+        ? prev.map(c => c.id === saved.id ? saved : c)
+        : [saved, ...prev];
     });
-    setPanel(null);
     showToast(saved.title + ' saved');
   }
   function handleDeleted(id) { setList(p => p.filter(c => c.id !== id)); setPanel(null); showToast('Contract deleted'); }
