@@ -15,6 +15,7 @@ import clientsRouter         from './routes/clients.js';
 import subcontractorsRouter  from './routes/subcontractors.js';
 import contactsRouter        from './routes/contacts.js';
 import contractsRouter       from './routes/contracts.js';
+import contractDocsRouter    from './routes/contract-documents.js';
 
 // Scheduler (starts cron jobs on import)
 import { startScheduler } from './services/scheduler.js';
@@ -79,8 +80,9 @@ app.use('/api/ai',             aiRouter);
 app.use('/api/payments',       paymentsRouter);
 app.use('/api/email',          emailRouter);
 app.use('/api/subcontractors', subcontractorsRouter);
-app.use('/api/contacts',      contactsRouter);
-app.use('/api/contracts',     contractsRouter);
+app.use('/api/contacts',                          contactsRouter);
+app.use('/api/contracts',                         contractsRouter);
+app.use('/api/contracts/:contractId/documents',   contractDocsRouter);
 
 // ── Health check ──────────────────────────────────────────
 app.get('/health', (_req, res) => res.json({ ok: true, ts: new Date().toISOString() }));

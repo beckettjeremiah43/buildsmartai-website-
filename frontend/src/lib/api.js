@@ -119,6 +119,11 @@ export const contracts = {
   create: (body)        => post('/api/contracts', body),
   update: (id, body)    => patch(`/api/contracts/${id}`, body),
   remove: (id)          => del(`/api/contracts/${id}`),
+  documents: {
+    list:   (contractId)        => get(`/api/contracts/${contractId}/documents`),
+    save:   (contractId, body)  => post(`/api/contracts/${contractId}/documents`, body),
+    remove: (contractId, docId) => del(`/api/contracts/${contractId}/documents/${docId}`),
+  },
 };
 
 // ── Payments ──────────────────────────────────────────────────────────────────
